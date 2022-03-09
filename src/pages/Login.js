@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { Link } from 'react-router-dom';
+import { FiSettings } from 'react-icons/fi';
 import { login } from '../actions';
 
 class Login extends React.Component {
@@ -32,6 +33,11 @@ class Login extends React.Component {
       dispatch(login(user, email));
       // console.log(token);
       history.push('./game');
+    }
+
+    handleClickSettings = () => {
+      const { history } = this.props;
+      history.push('/settings');
     }
 
     render() {
@@ -67,6 +73,13 @@ class Login extends React.Component {
             data-testid="btn-play"
           >
             Play
+          </button>
+          <button
+            type="button"
+            onClick={ this.handleClickSettings }
+            data-testid="btn-settings"
+          >
+            <FiSettings />
           </button>
         </div>);
     }
