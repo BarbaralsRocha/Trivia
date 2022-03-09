@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 // import { Link } from 'react-router-dom';
-// import { saveEmail } from '../actions';
+import { login } from '../actions';
 
 class Login extends React.Component {
     state = {
@@ -24,6 +24,14 @@ class Login extends React.Component {
         return disabledButton;
       }
       return disabledButton;
+    }
+
+    handleClick = async () => {
+      const { user, email } = this.state;
+      const { dispatch, history } = this.props;
+      dispatch(login(user, email));
+      // console.log(token);
+      history.push('./game');
     }
 
     render() {
@@ -54,7 +62,7 @@ class Login extends React.Component {
           </label>
           <button
             type="button"
-            // onClick={ this.handleClick }
+            onClick={ this.handleClick }
             disabled={ this.validateForms() }
             data-testid="btn-play"
           >
@@ -64,11 +72,16 @@ class Login extends React.Component {
     }
 }
 
-// Login.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-//   history: PropTypes.shape({
-//     push: PropTypes.func.isRequired,
-//   }).isRequired,
-// };
+// const mapStateToProps = (state) => ({
+//   // token: state.triviaRequest.token,
+// });
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  // token: PropTypes.string.isRequired,
+};
 
 export default connect()(Login);

@@ -71,6 +71,7 @@ describe('2 - [TELA DE LOGIN] Crie o botão de iniciar o jogo', () => {
       .should('be.calledWith', FETCH_TOKEN_URL);
 
     cy.window().its('store').invoke('getState').then((state) => {
+      console.log(state.token);
       expect(state.token).to.equal(tokenResponseMock.token);
     });
   });
