@@ -13,7 +13,7 @@ class Header extends React.Component {
       const { user } = this.props;
 
       return (
-      // comentário para push AAAAA
+      // comentário para push parte 2
         <header>
           <img
             data-testid="header-profile-picture"
