@@ -11,6 +11,11 @@ class Login extends React.Component {
       user: '',
     };
 
+    // componentDidMount() {
+    //   const { dispatch } = this.props;
+    //   dispatch(getRequestsTrivia());
+    // }
+
     handleChange = ({ target: { value, name } }) => {
       this.setState({ [name]: value });
     }
@@ -30,9 +35,8 @@ class Login extends React.Component {
     handleClick = async () => {
       const { user, email } = this.state;
       const { dispatch, history } = this.props;
-      dispatch(login(user, email));
-      // console.log(token);
-      history.push('./game');
+      await dispatch(login(user, email));
+      history.push('/game');
     }
 
     handleClickSettings = () => {
@@ -85,16 +89,11 @@ class Login extends React.Component {
     }
 }
 
-// const mapStateToProps = (state) => ({
-//   // token: state.triviaRequest.token,
-// });
-
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  // token: PropTypes.string.isRequired,
 };
 
 export default connect()(Login);
