@@ -26,7 +26,7 @@ class Questions extends React.Component {
     componentDidUpdate() {
       const TIME = 30000;
       return setTimeout(() => {
-        this.setState({ respostas: 'errou', disableAlternatives: true, counter: 0});
+        this.setState({ respostas: 'errou', disableAlternatives: true, counter: 0 });
         clearInterval(this.timer);
       }, TIME);
     }
