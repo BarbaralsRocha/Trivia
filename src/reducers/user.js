@@ -1,4 +1,5 @@
 const initialState = {
+  user: '',
   email: '',
 };
 
@@ -7,6 +8,7 @@ function user(state = initialState, action) {
   case 'LOGIN':
     return {
       ...state,
+      user: action.user,
       email: action.email,
     };
   default:
