@@ -5,13 +5,30 @@ import { connect } from 'react-redux';
 
 class Questions extends React.Component {
     state={
+      counter: 30,
       question: 0,
       respostas: '',
       requests: [],
+      disableAlternatives: false,
     }
+
+    timer = null
 
     componentDidMount() {
       this.setState({ requests: this.getRequests() });
+      const ONE_SECOND = 1000;
+      this.timer = setInterval(
+        () => this.setState((prevState) => ({ counter: prevState.counter - 1 })),
+        ONE_SECOND,
+      );
+    }
+
+    componentDidUpdate() {
+      const TIME = 30000;
+      return setTimeout(() => {
+        this.setState({ respostas: 'errou', disableAlternatives: true, counter: 0});
+        clearInterval(this.timer);
+      }, TIME);
     }
 
     getRequests = () => {
@@ -83,7 +100,7 @@ class Questions extends React.Component {
 
       render() {
         const { requestTrivia } = this.props;
-        const { question, respostas } = this.state;
+        const { question, respostas, disableAlternatives, counter } = this.state;
         const alternatives = this.getAlternatives();
 
         return (
@@ -98,12 +115,14 @@ class Questions extends React.Component {
                     data-testid={ this.validateAnswers()[index].type }
                     onClick={ () => this.checkAnswer(answer, index) }
                     className={ this.validateAnswers()[index].className }
+                    disabled={ disableAlternatives }
                   >
                     { answer }
                   </button>
                 </div>
               ))
             }
+            <p>{ counter }</p>
             <p>{respostas}</p>
             <button
               type="button"
