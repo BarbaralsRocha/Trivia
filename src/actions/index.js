@@ -4,13 +4,25 @@ export const setUserData = (user, email) => ({ type: LOGIN, user, email });
 
 export const tokenAPI = (token) => ({ type: 'TOKEN', token });
 
-export const login = (user, email) => (dispatch) => {
-  fetch('https://opentdb.com/api_token.php?command=request')
+export const getRequests = (requests) => ({ type: 'REQUESTS', requests });
+
+export const login = (user, email) => (dispatch) => fetch('https://opentdb.com/api_token.php?command=request')
+  .then((response) => response.json())
+  .then((data) => {
+    localStorage.setItem('token', data.token);
+    dispatch(setUserData(user, email));
+    dispatch(tokenAPI(data.token));
+  });
+
+export const getRequestsTrivia = () => (dispatch) => {
+  const getTokenLocal = localStorage.getItem('token');
+  return fetch(`https://opentdb.com/api.php?amount=5&token=${getTokenLocal}`)
     .then((response) => response.json())
     .then((data) => {
-    //   console.log(data.token);
-      localStorage.setItem('token', JSON.stringify(data.token));
-      dispatch(setUserData(user, email));
-      dispatch(tokenAPI(data.token));
+      const NEW_TOKEN = 3;
+      if (data.response_code === NEW_TOKEN) {
+        throw new Error('Refaça o Login');
+      }
+      dispatch(getRequests(data));
     });
 };
