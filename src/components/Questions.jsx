@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Questions.css';
 import { connect } from 'react-redux';
-import { setScore } from '../actions';
+import { getRankingLocal } from '../actions';
 
 const FIXED_PONTUATION = 10;
 const HARD_DIFFICULTY = 3;
@@ -82,8 +82,8 @@ class Questions extends React.Component {
       }
 
       checkAnswer = (answer) => { // click na alternativa
-        const { requestTrivia, dispatch } = this.props;
-        const { question, score, counter } = this.state;
+        const { requestTrivia, dispatch, user, picture } = this.props;
+        const { question, counter, score } = this.state;
         clearInterval(this.timer); // demonsta o time
         this.setState({ questionAnswered: true });
         if (requestTrivia[question].correct_answer === answer) { // verifica se é verdadeira
@@ -97,21 +97,21 @@ class Questions extends React.Component {
             this.setState({ score: [...score, scoreCalculate] },
               () => {
                 const { score: globalScore } = this.state;
-                dispatch(setScore(globalScore));
+                dispatch(getRankingLocal(globalScore, user, picture));
               });
           } else if (requestTrivia[question].difficulty === 'medium') {
             const scoreCalculate = FIXED_PONTUATION + (counter * MEDIUM);
             this.setState({ score: [...score, scoreCalculate] },
               () => {
                 const { score: globalScore } = this.state;
-                dispatch(setScore(globalScore));
+                dispatch(getRankingLocal(globalScore, user, picture));
               });
           } else if (requestTrivia[question].difficulty === 'easy') {
             const scoreCalculate = FIXED_PONTUATION + (counter * EASY);
             this.setState({ score: [...score, scoreCalculate] },
               () => {
                 const { score: globalScore } = this.state;
-                dispatch(setScore(globalScore));
+                dispatch(getRankingLocal(globalScore, user, picture));
               });
           }
         } else { // verifica se é falsa
@@ -187,7 +187,14 @@ class Questions extends React.Component {
       }
 }
 
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+  picture: state.picture,
+});
+
 Questions.propTypes = {
+  user: PropTypes.string.isRequired,
+  picture: PropTypes.string.isRequired,
   requestTrivia: PropTypes.arrayOf(PropTypes.object).isRequired,
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
@@ -195,4 +202,4 @@ Questions.propTypes = {
   }).isRequired,
 };
 
-export default connect()(Questions);
+export default connect(mapStateToProps)(Questions);
