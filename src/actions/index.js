@@ -6,6 +6,8 @@ export const tokenAPI = (token) => ({ type: 'TOKEN', token });
 
 export const getRequests = (requests) => ({ type: 'REQUESTS', requests });
 
+export const setScore = (score) => ({ type: 'SCORE', score });
+
 export const login = (user, email) => (dispatch) => fetch('https://opentdb.com/api_token.php?command=request')
   .then((response) => response.json())
   .then((data) => {
