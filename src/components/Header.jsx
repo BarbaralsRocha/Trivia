@@ -27,15 +27,11 @@ class Header extends React.Component {
             alt="gravatar"
           />
           <p data-testid="header-player-name">{ user }</p>
-          <p data-testid="header-score">{ !score ? '0' : score }</p>
+          <p data-testid="header-score">{ score }</p>
         </header>
       );
     }
 }
-
-// const mapDispatchToProps = (dispatch) => ({
-//   picture: () => dispatch(setPicture(`https://www.gravatar.com/avatar/${this.getImageGravatar()}`)),
-// });
 
 Header.propTypes = {
   email: PropTypes.string.isRequired,
@@ -47,7 +43,7 @@ Header.propTypes = {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   user: state.user.user,
-  score: state.ranking.map((score) => score.score),
+  score: state.player.score,
 });
 
 export default connect(mapStateToProps)(Header);

@@ -6,7 +6,7 @@ export const tokenAPI = (token) => ({ type: 'TOKEN', token });
 
 export const getRequests = (requests) => ({ type: 'REQUESTS', requests });
 
-// export const setScore = (score) => ({ type: 'ADD_SCORE', score });
+export const setScore = (score) => ({ type: 'ADD_SCORE', score });
 
 export const rankingPlayer = (ranking, score) => ({ type: 'RANKING', ranking, score });
 
@@ -19,6 +19,7 @@ export const getRankingLocal = (score, user, picture) => (dispatch) => {
     picture,
   }];
   localStorage.setItem('ranking', JSON.stringify(scorePlayer));
+  dispatch(setScore(score));
   dispatch(rankingPlayer(scorePlayer, score));
 };
 

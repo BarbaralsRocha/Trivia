@@ -1,13 +1,16 @@
-const initialState = 0;
+const initialState = {
+  score: 0,
+};
 
-function score(state = initialState, action) {
+function player(state = initialState, action) {
   switch (action.type) {
   case 'ADD_SCORE':
-    console.log('action', action.score);
-    return action.score + state;
+    return {
+      score: action.score.reduce((acc, valor) => acc + valor, 0),
+    };
   default:
     return state;
   }
 }
 
-export default score;
+export default player;
