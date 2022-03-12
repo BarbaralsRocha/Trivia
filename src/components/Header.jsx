@@ -2,16 +2,22 @@ import React from 'react';
 import md5 from 'crypto-js/md5';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { setPicture } from '../actions';
 
 class Header extends React.Component {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setPicture(`https://www.gravatar.com/avatar/${this.getImageGravatar()}`));
+  }
+
     getImageGravatar = () => {
       const { email } = this.props;
       return md5(email.toString());
     }
 
     render() {
-      const { user } = this.props;
-
+      const { user, score } = this.props;
+      console.log(score);
       return (
       // comentário para push parte 2
         <header>
@@ -21,19 +27,27 @@ class Header extends React.Component {
             alt="gravatar"
           />
           <p data-testid="header-player-name">{ user }</p>
-          <p data-testid="header-score">0</p>
+          <p data-testid="header-score">{ !score ? '0' : score }</p>
         </header>
       );
     }
 }
 
+// const mapDispatchToProps = (dispatch) => ({
+//   picture: () => dispatch(setPicture(`https://www.gravatar.com/avatar/${this.getImageGravatar()}`)),
+// });
+
 Header.propTypes = {
   email: PropTypes.string.isRequired,
   user: PropTypes.string.isRequired,
+  score: PropTypes.arrayOf(PropTypes.number).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   email: state.user.email,
   user: state.user.user,
+  score: state.ranking.map((score) => score.score),
 });
+
 export default connect(mapStateToProps)(Header);

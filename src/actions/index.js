@@ -6,7 +6,21 @@ export const tokenAPI = (token) => ({ type: 'TOKEN', token });
 
 export const getRequests = (requests) => ({ type: 'REQUESTS', requests });
 
-export const setScore = (score) => ({ type: 'SCORE', score });
+// export const setScore = (score) => ({ type: 'ADD_SCORE', score });
+
+export const rankingPlayer = (ranking, score) => ({ type: 'RANKING', ranking, score });
+
+export const setPicture = (picture) => ({ type: 'PICTURE', picture });
+
+export const getRankingLocal = (score, user, picture) => (dispatch) => {
+  const scorePlayer = [{
+    name: user,
+    score: score.reduce((acc, valor) => acc + valor, 0),
+    picture,
+  }];
+  localStorage.setItem('ranking', JSON.stringify(scorePlayer));
+  dispatch(rankingPlayer(scorePlayer, score));
+};
 
 export const login = (user, email) => (dispatch) => fetch('https://opentdb.com/api_token.php?command=request')
   .then((response) => response.json())
