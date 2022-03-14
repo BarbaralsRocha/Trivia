@@ -17,7 +17,6 @@ class Header extends React.Component {
 
     render() {
       const { user, score } = this.props;
-      console.log(score);
       return (
       // comentário para push parte 2
         <header>

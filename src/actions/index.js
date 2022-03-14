@@ -12,7 +12,10 @@ export const rankingPlayer = (ranking, score) => ({ type: 'RANKING', ranking, sc
 
 export const setPicture = (picture) => ({ type: 'PICTURE', picture });
 
+export const infosAnswer = (infos) => ({ type: 'INFOS_ANSWER', infos });
+
 export const getRankingLocal = (score, user, picture) => (dispatch) => {
+  // const players = JSON.parse(localStorage.getItem('ranking'));
   const scorePlayer = [{
     name: user,
     score: score.reduce((acc, valor) => acc + valor, 0),

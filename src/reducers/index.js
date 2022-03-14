@@ -5,6 +5,7 @@ import requests from './requests';
 import player from './score';
 import ranking from './ranking';
 import picture from './picture';
+import infosAnswer from './infosAnswer';
 
 const rootReducer = combineReducers({
   user,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   player,
   ranking,
   picture,
+  infosAnswer,
 });
 
 export default rootReducer;

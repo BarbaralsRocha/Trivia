@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Questions.css';
 import { connect } from 'react-redux';
-import { getRankingLocal } from '../actions';
+import { getRankingLocal, infosAnswer } from '../actions';
 
 const FIXED_PONTUATION = 10;
 const HARD_DIFFICULTY = 3;
@@ -12,11 +12,9 @@ const EASY = 1;
 
 class Questions extends React.Component {
     state={
-      counter: 30,
-      question: 0,
+      // counter: 30,
       respostas: '',
       requests: [],
-      disableAlternatives: false,
       questionAnswered: false,
       score: [],
     }
@@ -25,23 +23,6 @@ class Questions extends React.Component {
 
     componentDidMount() {
       this.setState({ requests: this.getRequests() }); // array de arrays um array para 5 arrays de alternativas ja sorteadas
-      const ONE_SECOND = 1000; // set o intervalo de decremento
-      this.timer = setInterval(
-        () => this.setState((prevState) => ({ counter: prevState.counter - 1 })),
-        ONE_SECOND,
-      );
-    }
-
-    componentDidUpdate() {
-      const TIME = 30000;
-      return setTimeout(() => { // duracao do tempo das perguntas
-        this.setState({ respostas: 'errou', disableAlternatives: true }); // o que sera feito quando o tempo acabar
-        clearInterval(this.timer);
-      }, TIME);
-    }
-
-    componentWillUnmount() {
-      clearInterval(this.timer); // desmonta o componente
     }
 
     getRequests = () => {
@@ -66,31 +47,30 @@ class Questions extends React.Component {
       };
 
       getAlternatives = () => { // pega as alternativas para cada questao
-        const { question, requests } = this.state;
+        const { requests } = this.state;
+        const { question } = this.props;
         const allRequests = requests[question];
         return allRequests;
       }
 
-      handleClick = () => { // quando clicar no botão next
-        const { question } = this.state;
-        const NUMBER_QUESTIONS = 4;
-        if (question === NUMBER_QUESTIONS) {
-          this.setState({ question: 0, respostas: '' }); // verifica se chegou na ultima resposta e faz isso dai
-        } else {
-          this.setState({ question: question + 1, respostas: '' });
-        }
+      dispatchInfos = () => {
+        const { respostas, questionAnswered } = this.state;
+        const { dispatch } = this.props;
+        dispatch(infosAnswer({
+          respostas, questionAnswered,
+        }));
       }
 
       checkAnswer = (answer) => { // click na alternativa
-        const { requestTrivia, dispatch, user, picture } = this.props;
-        const { question, counter, score } = this.state;
+        const { question, requestTrivia, dispatch, user, picture, counter } = this.props;
+        const { score } = this.state;
         clearInterval(this.timer); // demonsta o time
-        this.setState({ questionAnswered: true });
         if (requestTrivia[question].correct_answer === answer) { // verifica se é verdadeira
           this.setState({
-            respostas: 'acertou',
-            counter: '',
-          });
+            respostas: 'Resposta Correta!',
+            questionAnswered: true,
+          }, this.setInfosAboutQuestions);
+
           // faz os calculos da questao respondida se for certa. não é necessario fazer para a questao errada no momento
           if (requestTrivia[question].difficulty === 'hard') {
             const scoreCalculate = FIXED_PONTUATION + (counter * HARD_DIFFICULTY);
@@ -116,19 +96,22 @@ class Questions extends React.Component {
           }
         } else { // verifica se é falsa
           this.setState({
-            respostas: 'errou',
-            counter: 0,
-          });
+            respostas: 'Resposta Incorreta! :(',
+            questionAnswered: true,
+          }, this.setInfosAboutQuestions);
         }
       }
 
-      // getScore = () => {
-
-      // }
+      setInfosAboutQuestions = () => {
+        const { dispatch } = this.props;
+        const { respostas, questionAnswered } = this.state;
+        dispatch(infosAnswer({
+          respostas, questionAnswered,
+        }));
+      }
 
       validateAnswers = () => { // validacao de cada uma das alternativas dentro de um objeto
-        const { question } = this.state;
-        const { requestTrivia } = this.props;
+        const { requestTrivia, question } = this.props;
         const alternatives = this.getAlternatives();
         return alternatives.map((pergunta, index) => ({
           answer: pergunta,
@@ -140,11 +123,8 @@ class Questions extends React.Component {
       }
 
       render() {
-        const { requestTrivia } = this.props;
-        const { question, respostas,
-          disableAlternatives, counter, questionAnswered } = this.state;
+        const { requestTrivia, question, disabledTime } = this.props;
         const alternatives = this.getAlternatives();
-
         return (
           <div>
 
@@ -158,30 +138,15 @@ class Questions extends React.Component {
                     data-testid={ this.validateAnswers()[index].type }
                     onClick={ () => this.checkAnswer(answer, index) }
                     className={ this.validateAnswers()[index].className }
-                    disabled={ disableAlternatives }
+                    disabled={ disabledTime }
                   >
                     { answer }
                   </button>
                 </div>
               ))
             }
-            <p>{ counter }</p>
-            <p>{respostas}</p>
+            {/* <p>{ counter }</p> */}
             {/* <Counter />  */}
-            {
-
-              questionAnswered && (
-                <button
-                  type="button"
-                  onClick={ this.handleClick }
-                  disabled={ !respostas }
-                  data-testid="btn-next"
-                >
-                  Next
-                </button>
-              )
-            }
-            {/* <p>{score}</p> */}
           </div>
         );
       }
@@ -190,6 +155,8 @@ class Questions extends React.Component {
 const mapStateToProps = (state) => ({
   user: state.user.user,
   picture: state.picture,
+  disableAlternatives: state.time,
+  score: state.player.score,
 });
 
 Questions.propTypes = {
@@ -197,9 +164,9 @@ Questions.propTypes = {
   picture: PropTypes.string.isRequired,
   requestTrivia: PropTypes.arrayOf(PropTypes.object).isRequired,
   dispatch: PropTypes.func.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  question: PropTypes.number.isRequired,
+  disabledTime: PropTypes.bool.isRequired,
+  counter: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(Questions);
