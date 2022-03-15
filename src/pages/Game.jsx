@@ -59,11 +59,14 @@ class Game extends Component {
     }
   }
 
+  checkAnswer = () => {
+    const { infos } = this.props;
+    if (infos.respostas) clearInterval(this.timer);
+  }
+
   render() {
     const { requestTrivia, infos } = this.props;
     const { question, counter, disableAlternatives } = this.state;
-    console.log('disableAlternatives game', disableAlternatives);
-    console.log('requestTrivia', requestTrivia);
     return (
       <div>
         <Header />
@@ -75,9 +78,8 @@ class Game extends Component {
             disabledTime={ disableAlternatives }
           />
         }
-        <p>{infos.respostas}</p>
-        <p>{ counter }</p>
-        {/* <Counter /> */}
+        <p>{ infos.respostas }</p>
+        <p>{ !infos.respostas ? counter : this.checkAnswer() }</p>
         {
 
           infos.questionAnswered && (

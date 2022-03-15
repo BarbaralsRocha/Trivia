@@ -7,7 +7,7 @@ import ranking from './ranking';
 import picture from './picture';
 import infosAnswer from './infosAnswer';
 
-const rootReducer = combineReducers({
+const allReducers = combineReducers({
   user,
   token,
   requests,
@@ -16,5 +16,13 @@ const rootReducer = combineReducers({
   picture,
   infosAnswer,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === 'RESET') {
+    state = undefined;
+  }
+
+  return allReducers(state, action);
+};
 
 export default rootReducer;

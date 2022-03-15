@@ -99,6 +99,7 @@ class Questions extends React.Component {
             respostas: 'Resposta Incorreta! :(',
             questionAnswered: true,
           }, this.setInfosAboutQuestions);
+          dispatch(getRankingLocal(score, user, picture));
         }
       }
 
@@ -124,6 +125,7 @@ class Questions extends React.Component {
 
       render() {
         const { requestTrivia, question, disabledTime } = this.props;
+        const { questionAnswered } = this.state;
         const alternatives = this.getAlternatives();
         return (
           <div>
@@ -137,7 +139,8 @@ class Questions extends React.Component {
                     type="button"
                     data-testid={ this.validateAnswers()[index].type }
                     onClick={ () => this.checkAnswer(answer, index) }
-                    className={ this.validateAnswers()[index].className }
+                    className={ questionAnswered
+                      && this.validateAnswers()[index].className }
                     disabled={ disabledTime }
                   >
                     { answer }

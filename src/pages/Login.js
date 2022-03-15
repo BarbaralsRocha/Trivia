@@ -11,11 +11,6 @@ class Login extends React.Component {
       user: '',
     };
 
-    // componentDidMount() {
-    //   const { dispatch } = this.props;
-    //   dispatch(getRequestsTrivia());
-    // }
-
     handleChange = ({ target: { value, name } }) => {
       this.setState({ [name]: value });
     }

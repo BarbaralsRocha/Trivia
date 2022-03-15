@@ -14,14 +14,29 @@ export const setPicture = (picture) => ({ type: 'PICTURE', picture });
 
 export const infosAnswer = (infos) => ({ type: 'INFOS_ANSWER', infos });
 
+export const resetState = () => ({ type: 'RESET' });
+
+const setRankingPlayers = (scorePlayer) => {
+  const players = JSON.parse(localStorage.getItem('ranking')) || [];
+  if (!localStorage.getItem('ranking')) {
+    return localStorage.setItem('ranking', JSON.stringify([scorePlayer]));
+  }
+  const playerIndex = players.findIndex((item) => item.picture === scorePlayer.picture);
+  const SAME_PLAYER = -1;
+  if (playerIndex !== SAME_PLAYER) {
+    players[playerIndex].score = scorePlayer.score;
+    return localStorage.setItem('ranking', JSON.stringify(players));
+  }
+  return localStorage.setItem('ranking', JSON.stringify([...players, scorePlayer]));
+};
+
 export const getRankingLocal = (score, user, picture) => (dispatch) => {
-  // const players = JSON.parse(localStorage.getItem('ranking'));
-  const scorePlayer = [{
+  const scorePlayer = {
     name: user,
     score: score.reduce((acc, valor) => acc + valor, 0),
     picture,
-  }];
-  localStorage.setItem('ranking', JSON.stringify(scorePlayer));
+  };
+  setRankingPlayers(scorePlayer);
   dispatch(setScore(score));
   dispatch(rankingPlayer(scorePlayer, score));
 };
@@ -34,7 +49,7 @@ export const login = (user, email) => (dispatch) => fetch('https://opentdb.com/a
     dispatch(tokenAPI(data.token));
   });
 
-export const getRequestsTrivia = () => (dispatch) => {
+export const getRequestsTrivia = () => async (dispatch) => {
   const getTokenLocal = localStorage.getItem('token');
   return fetch(`https://opentdb.com/api.php?amount=5&token=${getTokenLocal}`)
     .then((response) => response.json())

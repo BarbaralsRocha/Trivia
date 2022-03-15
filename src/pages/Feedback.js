@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import { resetState } from '../actions';
 
 class Feedback extends React.Component {
   checkScore = () => {
     const { pontuacao } = this.props;
-    console.log(' pont  ', typeof pontuacao);
     const NUMBER_QUESTIONS = 3;
     if (pontuacao < NUMBER_QUESTIONS) {
       return 'Could be better...';
@@ -15,8 +15,9 @@ class Feedback extends React.Component {
   }
 
   handleClickBackToGame = () => {
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
     history.push('/');
+    dispatch(resetState());
   }
 
   handleClickRanking = () => {
@@ -58,6 +59,7 @@ class Feedback extends React.Component {
 const mapStateToProps = (state) => ({
   pontuacao: state.player.assertions,
   score: state.player.score,
+  requestsAPI: state.requests,
 });
 
 Feedback.propTypes = {
@@ -66,5 +68,6 @@ Feedback.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 export default connect(mapStateToProps)(Feedback);
