@@ -25,7 +25,11 @@ class Ranking extends React.Component {
           this.getRanking().map(({ name, score, picture }, index) => (
             <div key={ index }>
               <p data-testid={ `player-name-${index}` }>{name}</p>
-              <p data-testid={ `player-score-${index}` }>{score}</p>
+              <p data-testid={ `player-score-${index}` }>
+                Pontuação:
+                {' '}
+                {score}
+              </p>
               <img src={ picture } alt="game-player" />
             </div>
           ))

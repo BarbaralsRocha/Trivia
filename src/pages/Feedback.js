@@ -31,9 +31,11 @@ class Feedback extends React.Component {
       <div>
         <Header />
         <h1 data-testid="feedback-text">{ this.checkScore() }</h1>
+        <p>Pontuação: </p>
         <p data-testid="feedback-total-score">
           { score }
         </p>
+        <p>Total de alternativas corretas: </p>
         <p data-testid="feedback-total-question">
           { pontuacao }
         </p>

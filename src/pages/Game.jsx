@@ -44,7 +44,7 @@ class Game extends Component {
 
   handleClick = () => { // quando clicar no botão next
     const { question } = this.state;
-    const { history, infos } = this.props;
+    const { history, infos, dispatch } = this.props;
     this.setState({ counter: 30, disableAlternatives: false });
     clearInterval(this.timer);
     this.counterTime();
@@ -55,7 +55,9 @@ class Game extends Component {
       history.push('/feedback');
     } else {
       this.setState({ question: question + 1 });
-      infos.respostas = '';
+      const respostas = '';
+      const questionAnswered = false;
+      dispatch(infosAnswer({ respostas, questionAnswered }));
     }
   }
 

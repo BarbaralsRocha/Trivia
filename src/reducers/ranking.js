@@ -3,7 +3,7 @@ const initialState = [];
 function ranking(state = initialState, action) {
   switch (action.type) {
   case 'RANKING':
-    return [state.ranking, action.ranking];
+    return [action.ranking];
   default:
     return state;
   }

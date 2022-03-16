@@ -124,8 +124,7 @@ class Questions extends React.Component {
       }
 
       render() {
-        const { requestTrivia, question, disabledTime } = this.props;
-        const { questionAnswered } = this.state;
+        const { requestTrivia, question, disabledTime, infoQuenstions } = this.props;
         const alternatives = this.getAlternatives();
         return (
           <div>
@@ -139,9 +138,9 @@ class Questions extends React.Component {
                     type="button"
                     data-testid={ this.validateAnswers()[index].type }
                     onClick={ () => this.checkAnswer(answer, index) }
-                    className={ questionAnswered
+                    className={ infoQuenstions
                       && this.validateAnswers()[index].className }
-                    disabled={ disabledTime }
+                    disabled={ disabledTime || infoQuenstions }
                   >
                     { answer }
                   </button>
@@ -160,6 +159,7 @@ const mapStateToProps = (state) => ({
   picture: state.picture,
   disableAlternatives: state.time,
   score: state.player.score,
+  infoQuenstions: state.infosAnswer.questionAnswered,
 });
 
 Questions.propTypes = {
@@ -170,6 +170,7 @@ Questions.propTypes = {
   question: PropTypes.number.isRequired,
   disabledTime: PropTypes.bool.isRequired,
   counter: PropTypes.number.isRequired,
+  infoQuenstions: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps)(Questions);
